@@ -1,52 +1,30 @@
-<!DOCTYPE html>
-<html>
+<%- include("partials/header") %>
 
-<header>
-    <h1>IndiaKart</h1>
-    <p>Shop Smart • Shop Fast • Shop India 🇮🇳</p>
-</header>
+    <h2 class="section-title">🔥 Big Sales 🔥</h2>
+    <p style="text-align:center;">Grab exciting discounts today!</p>
 
-<head>
-    <title>Sales - IndiaKart</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <div class="products">
 
-<h1>IndiaKart</h1>
-<nav class="navbar">
-    <a href="index.html">Home</a>
-    <a href="sales.html">Sales</a>
-    <a href="cart.html">Cart</a>
-    <a href="signup.html">Sign Up</a>
-    <a href="contact.html">Contact</a>
-</nav>
+        <div class="product-card" data-name="Bluetooth Speaker" data-price="2999"
+            data-image="https://images.unsplash.com/photo-1585386959984-a4155224a1ad">
 
-<h1>🔥 Big Sales 🔥</h1>
-<p>Grab exciting discounts today!</p>
+            <span class="badge sale">SALE</span>
+            <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad">
+            <h3>Bluetooth Speaker</h3>
+            <p class="price">₹2,999</p>
+            <button class="btn-cart">Add to Cart</button>
+        </div>
 
-<div class="products">
-    <div class="product">
-        <h3>Bluetooth Speaker</h3>
-        <p class="price">₹2,999/-</p>
-        <button>Add to Cart</button>
+        <div class="product-card" data-name="Smart Watch" data-price="4499"
+            data-image="https://images.unsplash.com/photo-1519741497674-611481863552">
+
+            <span class="badge sale">SALE</span>
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552">
+            <h3>Smart Watch</h3>
+            <p class="price">₹4,499</p>
+            <button class="btn-cart">Add to Cart</button>
+        </div>
+
     </div>
 
-    <div class="product">
-        <h3>Smart Watch</h3>
-        <p class="price">₹4,499/-</p>
-        <button>Add to Cart</button>
-    </div>
-</div>
-
-</body>
-
-<footer class="footer">
-    <p>© 2026 IndiaKart | Designed with ❤️</p>
-    <p>
-        Follow us: 
-        <a href="#">Facebook</a> | 
-        <a href="#">Instagram</a> | 
-        <a href="#">Twitter</a>
-    </p>
-</footer>
-</html>
+    <%- include("partials/footer") %>
