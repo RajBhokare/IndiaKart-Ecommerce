@@ -242,13 +242,8 @@ app.use((err, req, res, next) => {
 // START SERVER
 // ============================================
 const server = app.listen(PORT, () => {
-  console.log("\n" + "=".repeat(48));
   console.log("  🛍️  IndiaKart E-Commerce Platform");
-  console.log("=".repeat(48));
   console.log(`  🚀 Running: http://localhost:${PORT}`);
-  console.log(`  📦 Products: ${products.length}`);
-  console.log(`  🏷️  Categories: ${categories.length - 1}`);
-  console.log("=".repeat(48) + "\n");
 });
 
 process.on("SIGTERM", () => server.close(() => process.exit(0)));
