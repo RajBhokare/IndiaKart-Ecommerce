@@ -25,18 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function addToCart(name, price, image) {
-    // Check if product already in cart
     const existing = cart.find(item => item.name === name);
     if (existing) {
       existing.quantity += 1;
     } else {
-      cart.push({
-        id: Date.now(),
-        name,
-        price: parseFloat(price),
-        image,
-        quantity: 1
-      });
+      cart.push({ id: Date.now(), name, price: parseFloat(price), image, quantity: 1 });
     }
     updateCartCount();
     showToast(`"${name.substring(0,30)}" added to cart!`);
@@ -121,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `).join("");
 
-    // Attach event listeners
     cartItemsContainer.querySelectorAll(".quantity-btn.plus").forEach(btn => {
       btn.addEventListener("click", () => updateQuantity(btn.dataset.id, 1));
     });
@@ -138,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCartSummary() {
     const { subtotal, tax, shipping, total } = calculateTotals();
     const fmt = n => `₹${n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-
     const el = id => document.getElementById(id);
     if (el("subtotal")) el("subtotal").textContent = fmt(subtotal);
     if (el("tax")) el("tax").textContent = fmt(tax);
@@ -156,7 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
     toast._timer = setTimeout(() => toast.classList.remove("show"), 3000);
   }
 
-  // Initialize cart
   updateCartCount();
   renderCart();
 
@@ -198,11 +188,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function filterAndSortProducts() {
     if (!productsGrid) return;
-
     const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : "";
     const category = categoryFilter ? categoryFilter.value : "all";
     const sortBy = sortSelect ? sortSelect.value : "default";
-
     const products = Array.from(productsGrid.querySelectorAll(".product-card"));
     let visibleCount = 0;
 
@@ -211,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const productCategory = product.dataset.category || "";
       const matchesSearch = !searchTerm || name.includes(searchTerm);
       const matchesCategory = category === "all" || productCategory === category;
-
       if (matchesSearch && matchesCategory) {
         product.style.display = "";
         visibleCount++;
@@ -220,7 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Sort
     if (sortBy !== "default") {
       const visible = products.filter(p => p.style.display !== "none");
       visible.sort((a, b) => {
@@ -239,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (categoryFilter) categoryFilter.addEventListener("change", filterAndSortProducts);
   if (sortSelect) sortSelect.addEventListener("change", filterAndSortProducts);
 
-  // View toggle
   document.querySelectorAll(".view-btn").forEach(btn => {
     btn.addEventListener("click", function() {
       document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
@@ -278,14 +263,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (modalClose) modalClose.addEventListener("click", () => checkoutModal && checkoutModal.classList.remove("show"));
 
-  // Close modal on backdrop click
   document.querySelectorAll(".modal").forEach(modal => {
     modal.addEventListener("click", (e) => {
       if (e.target === modal) modal.classList.remove("show");
     });
   });
 
-  // Promo code
   const promoBtn = document.getElementById("promoBtn");
   const promoInput = document.getElementById("promoInput");
   if (promoBtn) {
@@ -322,7 +305,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Highlight active nav link
   const currentPath = window.location.pathname;
   document.querySelectorAll(".nav-link").forEach(link => {
     const href = link.getAttribute("href");
@@ -370,15 +352,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (closeSuccessBtn) closeSuccessBtn.addEventListener("click", () => successModal && successModal.classList.remove("show"));
 
   // ============================================
-  // SIGNUP FORM
+  // SIGNUP FORM — validation only, POST handled by browser
   // ============================================
   const signupForm = document.getElementById("signupForm");
   const passwordInput = document.getElementById("password");
   const confirmPasswordInput = document.getElementById("confirmPassword");
   const togglePasswordBtn = document.getElementById("togglePassword");
   const toggleConfirmPasswordBtn = document.getElementById("toggleConfirmPassword");
-  const signupSuccessModal = document.getElementById("signupSuccessModal");
-  const modalCloseSignup = document.getElementById("modalCloseSignup");
 
   function checkPasswordStrength(password) {
     let score = 0;
@@ -416,7 +396,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const isPassword = input.type === "password";
     input.type = isPassword ? "text" : "password";
     const icon = btn.querySelector("i");
-    if (icon) { icon.classList.toggle("fa-eye", !isPassword); icon.classList.toggle("fa-eye-slash", isPassword); }
+    if (icon) {
+      icon.classList.toggle("fa-eye", !isPassword);
+      icon.classList.toggle("fa-eye-slash", isPassword);
+    }
   }
 
   if (togglePasswordBtn) togglePasswordBtn.addEventListener("click", () => togglePwVisibility(passwordInput, togglePasswordBtn));
@@ -424,37 +407,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (signupForm) {
     signupForm.addEventListener("submit", (e) => {
-      e.preventDefault();
       let valid = true;
       const pwErr = document.getElementById("passwordError");
       const cpErr = document.getElementById("confirmPasswordError");
 
+      if (pwErr) pwErr.textContent = "";
+      if (cpErr) cpErr.textContent = "";
+
       if (passwordInput && checkPasswordStrength(passwordInput.value) < 3) {
         if (pwErr) pwErr.textContent = "Password is too weak. Use 8+ characters with letters and numbers.";
         valid = false;
-      } else {
-        if (pwErr) pwErr.textContent = "";
       }
 
       if (passwordInput && confirmPasswordInput && passwordInput.value !== confirmPasswordInput.value) {
         if (cpErr) cpErr.textContent = "Passwords do not match.";
         valid = false;
-      } else {
-        if (cpErr) cpErr.textContent = "";
       }
 
-      if (valid) {
-        if (signupSuccessModal) signupSuccessModal.classList.add("show");
-        signupForm.reset();
-        const fill = document.querySelector(".strength-fill");
-        const text = document.querySelector(".strength-text");
-        if (fill) fill.style.width = "0";
-        if (text) text.textContent = "";
+      if (!valid) {
+        e.preventDefault();
+        return;
       }
+      // valid = true → browser POSTs to /signup naturally
     });
   }
-
-  if (modalCloseSignup) modalCloseSignup.addEventListener("click", () => signupSuccessModal && signupSuccessModal.classList.remove("show"));
 
   // ============================================
   // STATS COUNTER
@@ -469,7 +445,6 @@ document.addEventListener("DOMContentLoaded", () => {
           const target = parseInt(el.dataset.target);
           const duration = 1800;
           let start = null;
-
           function step(timestamp) {
             if (!start) start = timestamp;
             const progress = Math.min((timestamp - start) / duration, 1);
@@ -482,7 +457,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     }, { threshold: 0.5 });
-
     statNumbers.forEach(el => statsObserver.observe(el));
   }
 
@@ -550,29 +524,19 @@ document.addEventListener("DOMContentLoaded", () => {
 const themeToggle = document.getElementById("themeToggle");
 const themeIcon = document.getElementById("themeIcon");
 
-// Load saved theme
 const savedTheme = localStorage.getItem("theme") || "light";
 if (savedTheme === "dark") {
-    document.body.classList.add("dark");
-    if (themeIcon) {
-        themeIcon.classList.replace("fa-moon", "fa-sun");
-    }
+  document.body.classList.add("dark");
+  if (themeIcon) themeIcon.classList.replace("fa-moon", "fa-sun");
 }
 
 if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-        const isDark = document.body.classList.toggle("dark");
-
-        // Swap icon
-        if (themeIcon) {
-            if (isDark) {
-                themeIcon.classList.replace("fa-moon", "fa-sun");
-            } else {
-                themeIcon.classList.replace("fa-sun", "fa-moon");
-            }
-        }
-
-        // Save preference
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-    });
+  themeToggle.addEventListener("click", () => {
+    const isDark = document.body.classList.toggle("dark");
+    if (themeIcon) {
+      if (isDark) themeIcon.classList.replace("fa-moon", "fa-sun");
+      else themeIcon.classList.replace("fa-sun", "fa-moon");
+    }
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  });
 }
