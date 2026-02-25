@@ -301,12 +301,12 @@ body.dark .auth-divider::before { background: rgba(201,168,76,0.15); }
 /* Logo */
 .logo {
   display: flex;
-  align-items: center;
   gap: 10px;
   flex-shrink: 0;
   text-decoration: none;
+  align-items: center; /* fix: was 'left', not valid */
+  margin-right: auto;  /* pushes siblings to the right */
 }
-
 .logo img {
   height: 150px;
   width: auto;
@@ -755,6 +755,32 @@ body.dark .auth-divider::before { background: rgba(201,168,76,0.15); }
   border-color: var(--gold);
   transform: translateY(-3px);
   box-shadow: var(--shadow-md);
+}
+
+.brands-carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  padding: 20px 0;
+  /* fade edges */
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.brands-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: scroll-brands 25s linear infinite;
+}
+
+.brands-track:hover {
+  animation-play-state: paused; /* pauses on hover */
+}
+
+@keyframes scroll-brands {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* -50% because content is duplicated */
 }
 
 /* Section Label */
