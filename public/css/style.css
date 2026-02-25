@@ -304,7 +304,7 @@ body.dark .auth-divider::before { background: rgba(201,168,76,0.15); }
   gap: 10px;
   flex-shrink: 0;
   text-decoration: none;
-  align-items: center; /* fix: was 'left', not valid */
+  align-items: left; /* fix: was 'left', not valid */
   margin-right: auto;  /* pushes siblings to the right */
 }
 .logo img {
@@ -325,7 +325,7 @@ body.dark .auth-divider::before { background: rgba(201,168,76,0.15); }
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 28px;
 }
 
 .nav-link {
@@ -2282,7 +2282,7 @@ body.dark .auth-divider::before { background: rgba(201,168,76,0.15); }
 /* CTA */
 .cta-section {
   padding: 72px 0;
-  background: linear-gradient(135deg, #c0392b, #e07a5f);
+  background: linear-gradient(135deg, #060606, #1413555e);
   color: var(--cream);
   text-align: center;
   position: relative;
