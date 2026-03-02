@@ -308,7 +308,7 @@ body.dark .auth-divider::before { background: rgba(201,168,76,0.15); }
   margin-right: auto;  /* pushes siblings to the right */
 }
 .logo img {
-  height: 150px;
+  height: 200px;
   width: auto;
   object-fit: contain;
 }
@@ -1863,10 +1863,10 @@ body.dark .auth-divider::before { background: rgba(201,168,76,0.15); }
 }
 
 .auth-container {
-  width: 100%;
+  width: 120%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 16px;
 }
 
 .auth-layout {
@@ -1883,7 +1883,7 @@ body.dark .auth-divider::before { background: rgba(201,168,76,0.15); }
 
 .auth-branding {
   background: var(--navy);
-  padding: 60px 48px;
+  padding: 30px 24px;
   display: flex;
   align-items: flex-start;
   color: var(--cream);
