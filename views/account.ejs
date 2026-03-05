@@ -1,5 +1,557 @@
 <%- include("partials/header") %>
 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+        :root {
+            --bg: #0f0f0f;
+            --surface: #181818;
+            --surface2: #222222;
+            --border: #2a2a2a;
+            --accent: #c9a84c;
+            --accent-light: #e8c97a;
+            --text: #f0ede8;
+            --text-muted: #888;
+            --danger: #e05555;
+            --success: #4caf7d;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* ── Page Layout ── */
+        .account-page {
+            min-height: 100vh;
+            padding: 48px 24px;
+            background:
+                radial-gradient(ellipse 80% 40% at 20% 0%, rgba(201, 168, 76, .08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 30% at 80% 100%, rgba(201, 168, 76, .05) 0%, transparent 60%),
+                var(--bg);
+        }
+
+        .account-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        /* ── Sidebar ── */
+        .account-sidebar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: sticky;
+            top: 24px;
+        }
+
+        .account-profile {
+            padding: 32px 24px 28px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .account-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #8b6914);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            font-size: 28px;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(201, 168, 76, .3);
+        }
+
+        .account-profile h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .account-profile p {
+            font-size: .82rem;
+            color: var(--text-muted);
+        }
+
+        .account-nav {
+            padding: 12px 0;
+        }
+
+        .account-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: .9rem;
+            font-weight: 500;
+            transition: all .2s;
+            border-left: 3px solid transparent;
+        }
+
+        .account-nav-link:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, .04);
+        }
+
+        .account-nav-link.active {
+            color: var(--accent);
+            background: rgba(201, 168, 76, .07);
+            border-left-color: var(--accent);
+        }
+
+        .account-nav-link.logout-link {
+            color: var(--danger);
+            margin-top: 8px;
+        }
+
+        .account-nav-link.logout-link:hover {
+            background: rgba(224, 85, 85, .08);
+        }
+
+        /* ── Content Panel ── */
+        .account-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            min-height: 480px;
+        }
+
+        .account-tab {
+            display: none;
+            padding: 32px;
+        }
+
+        .account-tab.active {
+            display: block;
+            animation: fadeIn .25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .account-section-header {
+            margin-bottom: 28px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .account-section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .account-section-header h2 i {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        /* ── Profile Fields ── */
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .profile-field {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .profile-field-left label {
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .profile-field-left p {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .badge-active {
+            background: rgba(76, 175, 125, .15);
+            color: var(--success);
+            border: 1px solid rgba(76, 175, 125, .3);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: .8rem;
+            font-weight: 600;
+        }
+
+        /* ── Edit Name Inline ── */
+        .btn-edit-name {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: .8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s;
+            white-space: nowrap;
+        }
+
+        .btn-edit-name:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .edit-name-form {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .edit-name-form.show {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .edit-name-input {
+            flex: 1;
+            min-width: 180px;
+            background: var(--bg);
+            border: 1px solid var(--accent);
+            border-radius: 7px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .95rem;
+            padding: 9px 14px;
+            outline: none;
+            transition: box-shadow .2s;
+        }
+
+        .edit-name-input:focus {
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, .2);
+        }
+
+        .btn-save-name {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 7px;
+            padding: 9px 18px;
+            font-weight: 600;
+            font-size: .88rem;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .btn-save-name:hover {
+            background: var(--accent-light);
+        }
+
+        .btn-cancel-name {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 9px 14px;
+            font-size: .88rem;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .btn-cancel-name:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .name-success-msg {
+            display: none;
+            color: var(--success);
+            font-size: .82rem;
+            margin-top: 6px;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .name-success-msg.show {
+            display: flex;
+        }
+
+        /* ── Cart List ── */
+        .account-cart-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .account-cart-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            transition: border-color .2s;
+        }
+
+        .account-cart-item:hover {
+            border-color: rgba(201, 168, 76, .25);
+        }
+
+        .account-cart-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #111;
+            flex-shrink: 0;
+        }
+
+        .account-cart-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .account-cart-details h4 {
+            font-size: .95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .account-cart-details .qty-price {
+            font-size: .82rem;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .account-cart-total {
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .cart-summary-bar {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .cart-summary-bar .total-label {
+            font-size: .85rem;
+            color: var(--text-muted);
+        }
+
+        .cart-summary-bar .total-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .btn-remove {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 36px;
+            height: 36px;
+            border-radius: 7px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s;
+            flex-shrink: 0;
+        }
+
+        .btn-remove:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            background: rgba(224, 85, 85, .08);
+        }
+
+        /* ── Orders ── */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .order-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 20px;
+            transition: border-color .2s;
+        }
+
+        .order-card:hover {
+            border-color: rgba(201, 168, 76, .25);
+        }
+
+        .order-info h4 {
+            font-size: .95rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .order-info p {
+            font-size: .82rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .order-status {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: .78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, .12);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, .25);
+        }
+
+        .status-processing {
+            background: rgba(33, 150, 243, .12);
+            color: #42a5f5;
+            border: 1px solid rgba(33, 150, 243, .25);
+        }
+
+        .status-shipped {
+            background: rgba(156, 39, 176, .12);
+            color: #ba68c8;
+            border: 1px solid rgba(156, 39, 176, .25);
+        }
+
+        .status-delivered {
+            background: rgba(76, 175, 125, .12);
+            color: #4caf7d;
+            border: 1px solid rgba(76, 175, 125, .25);
+        }
+
+        .status-cancelled {
+            background: rgba(224, 85, 85, .12);
+            color: var(--danger);
+            border: 1px solid rgba(224, 85, 85, .25);
+        }
+
+        /* ── Empty State ── */
+        .account-empty {
+            text-align: center;
+            padding: 60px 24px;
+            color: var(--text-muted);
+        }
+
+        .account-empty i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+            opacity: .4;
+        }
+
+        .account-empty p {
+            margin-bottom: 20px;
+            font-size: .95rem;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border-radius: 8px;
+            font-size: .9rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all .2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(201, 168, 76, .3);
+        }
+
+        @media (max-width: 768px) {
+            .account-container {
+                grid-template-columns: 1fr;
+            }
+
+            .account-sidebar {
+                position: static;
+            }
+        }
+    </style>
+
     <section class="account-page">
         <div class="account-container">
 
@@ -7,9 +559,9 @@
             <div class="account-sidebar">
                 <div class="account-profile">
                     <div class="account-avatar">
-                        <i class="fas fa-user-circle"></i>
+                        <i class="fas fa-user"></i>
                     </div>
-                    <h3>
+                    <h3 id="sidebar-username">
                         <%= user.name %>
                     </h3>
                     <p>
@@ -27,7 +579,7 @@
                         <i class="fas fa-box"></i> My Orders
                     </a>
                     <a href="/logout" class="account-nav-link logout-link">
-                        <i class="fas fa-sign-out-alt"></i> Logout Account
+                        <i class="fas fa-sign-out-alt"></i> Logout
                     </a>
                 </nav>
             </div>
@@ -41,22 +593,53 @@
                         <h2><i class="fas fa-user"></i> My Profile</h2>
                     </div>
                     <div class="profile-info">
-                        <div class="profile-field">
-                            <label>Full Name</label>
-                            <p>
-                                <%= user.name %>
-                            </p>
+
+                        <!-- Full Name (editable) -->
+                        <div class="profile-field" style="flex-direction: column; align-items: flex-start;">
+                            <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                                <div class="profile-field-left">
+                                    <label>Full Name</label>
+                                    <p id="display-username">
+                                        <%= user.name %>
+                                    </p>
+                                </div>
+                                <button class="btn-edit-name" id="btn-edit-name">
+                                    <i class="fas fa-pencil-alt"></i> Edit
+                                </button>
+                            </div>
+
+                            <!-- Inline edit form -->
+                            <form class="edit-name-form" id="edit-name-form" action="/account/update-name"
+                                method="POST">
+                                <input class="edit-name-input" type="text" name="name" id="name-input"
+                                    value="<%= user.name %>" placeholder="Enter new name" maxlength="60" required />
+                                <button type="submit" class="btn-save-name"><i class="fas fa-check"></i> Save</button>
+                                <button type="button" class="btn-cancel-name" id="btn-cancel-name">Cancel</button>
+                            </form>
+
+                            <div class="name-success-msg" id="name-success">
+                                <i class="fas fa-check-circle"></i> Name updated successfully!
+                            </div>
                         </div>
+
+                        <!-- Email -->
                         <div class="profile-field">
-                            <label>Email Address</label>
-                            <p>
-                                <%= user.email %>
-                            </p>
+                            <div class="profile-field-left">
+                                <label>Email Address</label>
+                                <p>
+                                    <%= user.email %>
+                                </p>
+                            </div>
                         </div>
+
+                        <!-- Status -->
                         <div class="profile-field">
-                            <label>Account Status</label>
-                            <p><span class="badge-active">Active</span></p>
+                            <div class="profile-field-left">
+                                <label>Account Status</label>
+                                <p><span class="badge-active">Active</span></p>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -65,6 +648,7 @@
                     <div class="account-section-header">
                         <h2><i class="fas fa-shopping-cart"></i> My Cart</h2>
                     </div>
+
                     <% if (cartItems.length===0) { %>
                         <div class="account-empty">
                             <i class="fas fa-shopping-cart"></i>
@@ -80,20 +664,35 @@
                                             <h4>
                                                 <%= item.name %>
                                             </h4>
-                                            <p>₹<%= item.price.toLocaleString() %> × <%= item.quantity %>
+                                            <p class="qty-price">₹<%= item.price.toLocaleString() %> × <%= item.quantity
+                                                        %>
                                             </p>
                                             <p class="account-cart-total">₹<%= (item.price *
                                                     item.quantity).toLocaleString() %>
                                             </p>
                                         </div>
                                         <form action="/cart/remove/<%= item.id %>" method="POST">
-                                            <button type="submit" class="btn-remove"><i
-                                                    class="fas fa-trash"></i></button>
+                                            <button type="submit" class="btn-remove" title="Remove item">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </form>
                                     </div>
                                     <% }) %>
                             </div>
-                            <a href="/cart" class="btn btn-primary">View Full Cart</a>
+
+                            <!-- Cart total summary -->
+                            <div class="cart-summary-bar">
+                                <span class="total-label">Cart Total (<%= cartItems.length %> item<%= cartItems.length
+                                            !==1 ? 's' : '' %>)</span>
+                                <span class="total-amount">
+                                    ₹<%= cartItems.reduce((sum, item)=> sum + item.price * item.quantity,
+                                        0).toLocaleString() %>
+                                </span>
+                            </div>
+
+                            <a href="/cart" class="btn btn-primary">
+                                <i class="fas fa-shopping-bag"></i> View Full Cart & Checkout
+                            </a>
                             <% } %>
                 </div>
 
@@ -102,6 +701,7 @@
                     <div class="account-section-header">
                         <h2><i class="fas fa-box"></i> My Orders</h2>
                     </div>
+
                     <% if (orders.length===0) { %>
                         <div class="account-empty">
                             <i class="fas fa-box-open"></i>
@@ -115,7 +715,8 @@
                                         <div class="order-info">
                                             <h4>Order #<%= order.id %>
                                             </h4>
-                                            <p>Date: <%= new Date(order.created_at).toLocaleDateString() %>
+                                            <p>Date: <%= new Date(order.created_at).toLocaleDateString('en-IN', {
+                                                    day:'numeric', month:'short', year:'numeric' }) %>
                                             </p>
                                             <p>Total: ₹<%= order.total.toLocaleString() %>
                                             </p>
@@ -134,19 +735,75 @@
     </section>
 
     <script>
-        // Tab switching
+        // ── Tab switching ──
         document.querySelectorAll('.account-nav-link[data-tab]').forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 const tab = this.dataset.tab;
-
                 document.querySelectorAll('.account-nav-link').forEach(l => l.classList.remove('active'));
                 document.querySelectorAll('.account-tab').forEach(t => t.classList.remove('active'));
-
                 this.classList.add('active');
                 document.getElementById('tab-' + tab).classList.add('active');
             });
         });
+
+        // ── Edit Name ──
+        const btnEdit = document.getElementById('btn-edit-name');
+        const btnCancel = document.getElementById('btn-cancel-name');
+        const editForm = document.getElementById('edit-name-form');
+        const nameInput = document.getElementById('name-input');
+        const successMsg = document.getElementById('name-success');
+
+        btnEdit.addEventListener('click', () => {
+            editForm.classList.add('show');
+            btnEdit.style.display = 'none';
+            nameInput.focus();
+            successMsg.classList.remove('show');
+        });
+
+        btnCancel.addEventListener('click', () => {
+            editForm.classList.remove('show');
+            btnEdit.style.display = 'flex';
+            nameInput.value = document.getElementById('display-username').textContent.trim();
+        });
+
+        // Optional: if you want optimistic UI update without full page reload
+        // (works only if your backend returns JSON; otherwise let the form POST redirect naturally)
+        editForm.addEventListener('submit', async function (e) {
+            const newName = nameInput.value.trim();
+            if (!newName) return;
+
+            // Try AJAX first; fall back to normal form submit if fetch fails
+            e.preventDefault();
+            try {
+                const res = await fetch('/account/update-name', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: newName })
+                });
+
+                if (res.ok) {
+                    document.getElementById('display-username').textContent = newName;
+                    document.getElementById('sidebar-username').textContent = newName;
+                    editForm.classList.remove('show');
+                    btnEdit.style.display = 'flex';
+                    successMsg.classList.add('show');
+                    setTimeout(() => successMsg.classList.remove('show'), 3500);
+                } else {
+                    // Server error — fall back to regular POST
+                    this.submit();
+                }
+            } catch {
+                // Network error — fall back to regular POST
+                this.submit();
+            }
+        });
+
+        // ── Open tab from URL hash on load ──
+        const hash = location.hash.replace('#', '');
+        if (['profile', 'cart', 'orders'].includes(hash)) {
+            document.querySelector(`[data-tab="${hash}"]`)?.click();
+        }
     </script>
 
     <%- include("partials/footer") %>
